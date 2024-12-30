@@ -7,6 +7,7 @@ public class GameStateManager : MonoBehaviour
     public static GameStateManager Instance { get; private set; }
     public GameState gameState { get; private set; } = GameState.MainMenu;
     public GameMode gameMode { get; private set; }
+
     void SetGameState(GameState gameState)
     {
         this.gameState = gameState;

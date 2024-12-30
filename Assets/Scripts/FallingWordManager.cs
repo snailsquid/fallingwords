@@ -6,9 +6,24 @@ public class FallingWordManager : MonoBehaviour
 {
     public float initialSpeed = 1.0f;
     public float speedVariation = 0.1f;
+    public float rate = 1.0f;
     public Transform fallingWordPrefab, spawnArea;
+    public WordGenerator.Theme theme;
+    void StartGame(WordGenerator.Theme theme)
+    {
+        this.theme = theme;
+        StartCoroutine(StartGameCoroutine());
+    }
+    IEnumerator StartGameCoroutine()
+    {
+        while (GameStateManager.Instance.gameState == GameStateManager.GameState.Playing)
+        {
+            InstantiateWord();
+            yield return new WaitForSeconds(1.0f / rate);
+        }
+    }
 
-    void InstantiateWord(WordGenerator.Theme theme)
+    void InstantiateWord()
     {
         string word = WordGenerator.GetRandomWord(theme);
         float speed = initialSpeed * (1 + Random.Range(-speedVariation, speedVariation));
