@@ -9,6 +9,7 @@ public class FallingWordManager : MonoBehaviour
     public float rate = 1.0f;
     public Transform fallingWordPrefab, spawnArea;
     public WordGenerator.Theme theme;
+    public Dictionary<string, bool> wordsOnScreen = new Dictionary<string, bool>();
     public void StartGame(WordGenerator.Theme theme)
     {
         this.theme = theme;
@@ -18,14 +19,22 @@ public class FallingWordManager : MonoBehaviour
     {
         while (GameStateManager.Instance.gameState == GameStateManager.GameState.Playing)
         {
-            InstantiateWord();
+            string word = WordGenerator.GetRandomWord(theme);
+            InstantiateWord(word);
+            AddWord(word);
             yield return new WaitForSeconds(1.0f / rate);
         }
     }
-
-    void InstantiateWord()
+    public void AddWord(string word)
     {
-        string word = WordGenerator.GetRandomWord(theme);
+        wordsOnScreen.Add(word, false);
+    }
+    public void RemoveWord(string word)
+    {
+        wordsOnScreen.Remove(word);
+    }
+    void InstantiateWord(string word)
+    {
         float speed = initialSpeed * (1 + Random.Range(-speedVariation, speedVariation));
 
         Vector2 spawnPos = new Vector2(spawnArea.localScale.x * Random.Range(-1.0f, 1.0f) * 0.5f, spawnArea.position.y);
