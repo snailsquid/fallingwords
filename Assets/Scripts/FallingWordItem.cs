@@ -20,8 +20,9 @@ public class FallingWordItem : MonoBehaviour
     {
         transform.Translate(Vector3.down * speed * Time.deltaTime);
     }
-    void OnCollisionEnter2D(Collision2D collision)
+    void OnTriggerEnter2D(Collider2D collision)
     {
+        Debug.Log("trigger");
         if (collision.gameObject.CompareTag("Despawner"))
         {
             Destroy(gameObject);
@@ -30,6 +31,6 @@ public class FallingWordItem : MonoBehaviour
     }
     void Despawn()
     {
-
+        ServiceLocator.Instance.fallingWordManager.wordsContainer.RemoveWord(word);
     }
 }

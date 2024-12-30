@@ -16,6 +16,12 @@ public class GameStateManager : MonoBehaviour
             // Start the game
         }
     }
+    void Start()
+    {
+        // Debug stuff
+        // gameState = GameState.Playing;
+        // ServiceLocator.Instance.fallingWordManager.StartGame(WordGenerator.Theme.EverydayItems);
+    }
     void SetTheme(WordGenerator.Theme theme)
     {
         this.theme = theme;
@@ -29,7 +35,6 @@ public class GameStateManager : MonoBehaviour
         if (Instance == null || Instance == this)
         {
             Instance = this;
-            DontDestroyOnLoad(gameObject);
         }
         else
         {
