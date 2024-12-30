@@ -9,7 +9,7 @@ public class FallingWordManager : MonoBehaviour
     public float rate = 1.0f;
     public Transform fallingWordPrefab, spawnArea;
     public WordGenerator.Theme theme;
-    void StartGame(WordGenerator.Theme theme)
+    public void StartGame(WordGenerator.Theme theme)
     {
         this.theme = theme;
         StartCoroutine(StartGameCoroutine());
