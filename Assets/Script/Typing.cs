@@ -1,4 +1,4 @@
-using System.Collections;
+using System.Linq;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -43,21 +43,21 @@ public class Typing : MonoBehaviour
     void Update()
     {
         checkInput();
-        foreach(var item in theWords)
+        foreach(string item in theWords.Keys.ToList())
         {
             if(remainingWord != "")
             {
-                if((item.Key.StartsWith(remainingWord))&&(theWords[item.Key] == false))
+                if((item.StartsWith(remainingWord))&&(theWords[item] == false))
                 {
-                    theWords[item.Key] = true;
-                    Debug.Log(item.Key);
-                    Debug.Log(theWords[item.Key]);
+                    theWords[item] = true;
+                    Debug.Log(item);
+                    Debug.Log(theWords[item]);
                 }
-                else if((theWords[item.Key] == true)&&(!item.Key.Contains(remainingWord)))
+                else if((theWords[item] == true)&&(!item.StartsWith(remainingWord)))
                 {
-                    theWords[item.Key] = false;
-                    Debug.Log(item.Key);
-                    Debug.Log(theWords[item.Key]);
+                    theWords[item] = false;
+                    Debug.Log(item);
+                    Debug.Log(theWords[item]);
                 }
             }
         }
