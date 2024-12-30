@@ -5,6 +5,7 @@ using UnityEngine.UI;
 
 public class Typing : MonoBehaviour
 {
+    private Dictionary<string, bool> theWords = new Dictionary<string, bool>();
     public int Accuracy = 10;
     public Wordbank wordBank = null;
     public Text wordOutput = null;
@@ -14,6 +15,15 @@ public class Typing : MonoBehaviour
     void Start()
     {
         setCurrentWord();
+        theWords.Add("pen",false);
+        theWords.Add("penys",false);
+        theWords.Add("bag",false);
+        theWords.Add("bang",false);
+        foreach(var item in theWords)
+        {
+            Debug.Log(item.Key);
+        }
+        
     }
     private void setCurrentWord()
     {
@@ -33,6 +43,24 @@ public class Typing : MonoBehaviour
     void Update()
     {
         checkInput();
+        foreach(var item in theWords)
+        {
+            if(remainingWord != "")
+            {
+                if((item.Key.Contains(remainingWord))&&(theWords[item.Key] == false))
+                {
+                    theWords[item.Key] = true;
+                    Debug.Log(item.Key);
+                    Debug.Log(theWords[item.Key]);
+                }
+                else if((theWords[item.Key] == true)&&(!item.Key.Contains(remainingWord)))
+                {
+                    theWords[item.Key] = false;
+                    Debug.Log(item.Key);
+                    Debug.Log(theWords[item.Key]);
+                }
+            }
+        }
     }
     private void checkInput()
     {
@@ -59,16 +87,17 @@ public class Typing : MonoBehaviour
     }
     private void isCorrect(string letter)
     {
-        if(letter == currentWord)
+        if(theWords[letter]==true)
+    //    if(letter == currentWord)
         {
-            Debug.Log("Correct");
+            Debug.Log(letter+"Correct");
             Debug.Log(Accuracy);
             submitWord();
-            setCurrentWord();
+            //setCurrentWord();
         }
         else
-        {
-            Debug.Log("Nigga you typo");
+       {
+            Debug.Log("Nice person you typo");
             submitWord();
         }
     }
