@@ -5,9 +5,11 @@ using UnityEngine.UI;
 
 public class Typing : MonoBehaviour
 {
+    public int Accuracy = 10;
+    public Wordbank wordBank = null;
     public Text wordOutput = null;
     private string remainingWord = string.Empty;
-    private string currentWord = "ligma";
+    private string currentWord = string.Empty;
 
     void Start()
     {
@@ -15,7 +17,13 @@ public class Typing : MonoBehaviour
     }
     private void setCurrentWord()
     {
-        //bankword
+        Accuracy = 10;
+        currentWord = wordBank.getWord();
+        Debug.Log(currentWord);
+        if(currentWord == "")
+        {
+            setCurrentWord();
+        }
     }
     private void setRemainingWord(string newWord)
     {
@@ -31,6 +39,10 @@ public class Typing : MonoBehaviour
         if(Input.GetKeyDown(KeyCode.Return))
         {
             isCorrect(remainingWord);
+        }
+        else if(Input.GetKeyDown(KeyCode.Backspace))
+        {
+            removeLetter();
         }
         else if(Input.anyKeyDown)
         {
@@ -50,11 +62,13 @@ public class Typing : MonoBehaviour
         if(letter == currentWord)
         {
             Debug.Log("Correct");
+            Debug.Log(Accuracy);
             submitWord();
+            setCurrentWord();
         }
         else
         {
-            Debug.Log(letter);
+            Debug.Log("Nigga you typo");
             submitWord();
         }
     }
@@ -63,6 +77,13 @@ public class Typing : MonoBehaviour
         int Index = remainingWord.Length;
         string newString = remainingWord.Insert(Index,add);
         setRemainingWord(newString);
+    }
+    private void removeLetter()
+    {
+        int Index = remainingWord.Length;
+        string newString = remainingWord.Remove((Index-1),1);
+        setRemainingWord(newString);
+        Accuracy -= 1;
     }
     private void submitWord()
     {
