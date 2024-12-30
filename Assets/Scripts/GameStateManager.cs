@@ -7,6 +7,7 @@ public class GameStateManager : MonoBehaviour
     public static GameStateManager Instance { get; private set; }
     public GameState gameState { get; private set; } = GameState.MainMenu;
     public GameMode gameMode { get; private set; }
+    public WordGenerator.Theme theme { get; private set; }
     void SetGameState(GameState gameState)
     {
         this.gameState = gameState;
@@ -14,6 +15,10 @@ public class GameStateManager : MonoBehaviour
         {
             // Start the game
         }
+    }
+    void SetTheme(WordGenerator.Theme theme)
+    {
+        this.theme = theme;
     }
     void SetGameMode(GameMode gameMode)
     {
