@@ -47,7 +47,7 @@ public class Typing : MonoBehaviour
         {
             if(remainingWord != "")
             {
-                if((item.Key.Contains(remainingWord))&&(theWords[item.Key] == false))
+                if((item.Key.StartsWith(remainingWord))&&(theWords[item.Key] == false))
                 {
                     theWords[item.Key] = true;
                     Debug.Log(item.Key);
