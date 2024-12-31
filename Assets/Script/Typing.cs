@@ -6,9 +6,12 @@ using UnityEngine.UI;
 public class Typing : MonoBehaviour
 {
     private Dictionary<string, bool> theWords = new Dictionary<string, bool>();
-    public int Accuracy = 10;
-    public Wordbank wordBank = null;
-    public Text wordOutput = null;
+    public int totalScore;
+    public float time = 0f;
+    private int Accuracy = 0;
+    public Wordbank wordBank;
+    public Text wordOutput;
+    public Text scoreOutput;
     private string remainingWord = string.Empty;
     private string currentWord = string.Empty;
 
@@ -27,7 +30,7 @@ public class Typing : MonoBehaviour
     }
     private void setCurrentWord()
     {
-        Accuracy = 10;
+        Accuracy = 0;
         currentWord = wordBank.getWord();
         Debug.Log(currentWord);
         if(currentWord == "")
@@ -42,6 +45,7 @@ public class Typing : MonoBehaviour
     }
     void Update()
     {
+        time += Time.deltaTime;
         checkInput();
         foreach(string item in theWords.Keys.ToList())
         {
@@ -87,13 +91,17 @@ public class Typing : MonoBehaviour
     }
     private void isCorrect(string letter)
     {
-        if(theWords[letter]==true)
-    //    if(letter == currentWord)
+        if(theWords.ContainsKey(letter))
         {
-            Debug.Log(letter+"Correct");
-            Debug.Log(Accuracy);
-            submitWord();
-            //setCurrentWord();
+            if(theWords[letter]==true)
+            //if(letter == currentWord)
+            {
+                Debug.Log(letter+"Correct");
+                Debug.Log(Accuracy);
+                addScore(letter,Accuracy,Mathf.Floor(time));
+                submitWord();
+                //setCurrentWord();
+            }
         }
         else
        {
@@ -112,12 +120,26 @@ public class Typing : MonoBehaviour
         int Index = remainingWord.Length;
         string newString = remainingWord.Remove((Index-1),1);
         setRemainingWord(newString);
-        Accuracy -= 1;
+        if(Accuracy> -2)
+        {
+            Accuracy -= 1;
+        }
     }
     private void submitWord()
     {
         int Index = remainingWord.Length;
         string newString = remainingWord.Remove(0,Index);
         setRemainingWord(newString);
+        Accuracy = 0;
+        time = 0;
+    }
+    private void addScore(string word,int akurasi,float speed)
+    {
+        int score = (100*word.Length)+(akurasi*20)-((int)speed);
+        if(score >= 0)
+        {
+            totalScore += score;
+        }
+        scoreOutput.text = totalScore.ToString();
     }
 }
