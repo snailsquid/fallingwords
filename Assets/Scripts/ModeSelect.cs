@@ -1,29 +1,32 @@
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
-using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine;
 
 public class ModeSelect : MonoBehaviour
 {
-    Button button_WordMode;
-    Button button_TimeMode;
-    Button button_EndlessMode;
+    [SerializeField] Transform gameManager;
+    public Button button_WordMode;
+    public Button button_TimeMode;
+    public Button button_EndlessMode;
 
-    // Start is called before the first frame update
-    void Start()
+    public void Start()
     {
         button_WordMode.onClick.AddListener(() =>
         {
-            WordMode();
+            gameManager.GetComponent<GameStateManager>().SetGameMode(GameStateManager.GameMode.Word);
+            Menu.ModetoTheme();
         });
         button_TimeMode.onClick.AddListener(() =>
         {
-            TimeMode();
+            gameManager.GetComponent<GameStateManager>().SetGameMode(GameStateManager.GameMode.Time);
+            Menu.ModetoTheme();
         });
         button_EndlessMode.onClick.AddListener(() =>
         {
-            EndlessMode();
+            gameManager.GetComponent<GameStateManager>().SetGameMode(GameStateManager.GameMode.Endless);
+            Menu.ModetoTheme();
         });
     }
 }

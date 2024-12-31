@@ -16,11 +16,11 @@ public class GameStateManager : MonoBehaviour
             // Start the game
         }
     }
-    void SetTheme(WordGenerator.Theme theme)
+    public void SetTheme(WordGenerator.Theme theme)
     {
         this.theme = theme;
     }
-    void SetGameMode(GameMode gameMode)
+    public void SetGameMode(GameMode gameMode)
     {
         this.gameMode = gameMode;
     }
