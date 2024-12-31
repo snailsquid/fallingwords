@@ -56,5 +56,5 @@
         "temp/": true,
         "Temp/": true
     },
-    "dotnet.defaultSolution": "falling words.sln"
+    "dotnet.defaultSolution": "fallingwords.sln"
 }
