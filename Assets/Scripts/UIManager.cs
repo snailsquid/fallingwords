@@ -1,18 +1,39 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+using AYellowpaper.SerializedCollections;
+using UnityEngine.EventSystems;
 public class UIManager : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
+  [SerializedDictionary("UI Element", "UI Game Object")]
+  public SerializedDictionary<string, UIBehaviour> uiElements;
+  [SerializedDictionary("UI Element Group", "UI Element")]
+  public SerializedDictionary<string, string[]> uiElementGroup;
+  public void SetActive(string uiElement, bool active)
+  {
+    if (uiElements.ContainsKey(uiElement))
     {
-        
+      uiElements[uiElement].gameObject.SetActive(active);
     }
-
-    // Update is called once per frame
-    void Update()
+  }
+  public void SetActiveGroup(string group, bool active)
+  {
+    if (uiElementGroup.ContainsKey(group))
     {
-        
+      foreach (string uiElement in uiElementGroup[group])
+      {
+        SetActive(uiElement, active);
+      }
     }
+  }
+  public void NextUI(string currentUIElement, string nextUIElement)
+  {
+    SetActive(nextUIElement, true);
+    SetActive(currentUIElement, false);
+  }
+  public void NextUIGroup(string currentUIGroup, string nextUIGroup)
+  {
+    SetActiveGroup(nextUIGroup, true);
+    SetActiveGroup(currentUIGroup, false);
+  }
 }
