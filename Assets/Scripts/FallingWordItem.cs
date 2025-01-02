@@ -9,7 +9,12 @@ public class FallingWordItem : MonoBehaviour
     public float speed = 1.0f;
     public string word = "example";
     [SerializeField] private TMP_Text text;
+    FallingWordManager fallingWordManager;
 
+    void Start()
+    {
+        fallingWordManager = ServiceLocator.Instance.fallingWordManager;
+    }
     public void Set(string word, float speed)
     {
         this.word = word;
@@ -25,12 +30,13 @@ public class FallingWordItem : MonoBehaviour
         Debug.Log("trigger");
         if (collision.gameObject.CompareTag("Despawner"))
         {
-            Destroy(gameObject);
             Despawn();
+            Destroy(gameObject);
         }
     }
     void Despawn()
     {
-        ServiceLocator.Instance.fallingWordManager.wordsContainer.RemoveWord(word);
+        fallingWordManager.wordsContainer.RemoveWord(word);
+        fallingWordManager.RemoveWordItem(this);
     }
 }
