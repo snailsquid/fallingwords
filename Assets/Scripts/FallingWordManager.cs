@@ -135,6 +135,7 @@ public class WordsContainer
     public List<List<string>> availableWords;
     public List<string> powerUpWords;
     public List<string> trapWords;
+    public Typing typing;
     public WordsContainer(WordGenerator.Theme theme)
     {
         availableWords = WordGenerator.GetWordBank(theme);
@@ -186,13 +187,21 @@ public class WordsContainer
     public void AddWord(string word)
     {
         if(wordsOnScreen.ContainsKey(word)){}
-        else wordsOnScreen.Add(word, false);
+        else 
+        {
+            wordsOnScreen.Add(word, false);
+            //typing.addTheWords(word);
+        }
     }
     public void RemoveWord(string word)
     {
         wordsOnScreen.Remove(word);
         if(powerUpWords.Contains(word)){}
         else if(trapWords.Contains(word)){}
-        else availableWords[word.Length - 3].Add(word);
+        else 
+        {
+            availableWords[word.Length - 3].Add(word);
+            //typing.removeTheWords(word);
+        }
     }
 }

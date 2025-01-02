@@ -1,5 +1,6 @@
 using System.Linq;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -9,35 +10,24 @@ public class Typing : MonoBehaviour
     public int totalScore;
     public float time = 0f;
     private int Accuracy = 0;
-    public Wordbank wordBank;
-    public Text wordOutput;
-    public Text scoreOutput;
+    //public Wordbank wordBank;
+    public TMP_Text wordOutput;
+    //public Text scoreOutput;
     private string remainingWord = string.Empty;
     private string currentWord = string.Empty;
+    public void addTheWords(string word)
+    {
+        if(theWords.ContainsKey(word)){}
+        else theWords.Add(word, false);
+    }
+    public void removeTheWords(string word)
+    {
+        if(theWords.ContainsKey(word))
+        {
+            theWords.Remove(word);
+        }
+    }
 
-    void Start()
-    {
-        setCurrentWord();
-        theWords.Add("pen",false);
-        theWords.Add("penys",false);
-        theWords.Add("bag",false);
-        theWords.Add("bang",false);
-        foreach(var item in theWords)
-        {
-            Debug.Log(item.Key);
-        }
-        
-    }
-    private void setCurrentWord()
-    {
-        Accuracy = 0;
-        currentWord = wordBank.getWord();
-        Debug.Log(currentWord);
-        if(currentWord == "")
-        {
-            setCurrentWord();
-        }
-    }
     private void setRemainingWord(string newWord)
     {
         remainingWord = newWord;
@@ -140,6 +130,6 @@ public class Typing : MonoBehaviour
         {
             totalScore += score;
         }
-        scoreOutput.text = totalScore.ToString();
+        //scoreOutput.text = totalScore.ToString();
     }
 }
