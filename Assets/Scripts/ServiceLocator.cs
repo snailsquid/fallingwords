@@ -8,6 +8,8 @@ public class ServiceLocator : MonoBehaviour
     public GameStateManager gameStateManager;
     public FallingWordManager fallingWordManager;
 
+    public WordBasedGamemode wordBasedGamemode;
+
     void Awake()
     {
         if (Instance == null || Instance == this)
@@ -15,6 +17,7 @@ public class ServiceLocator : MonoBehaviour
             Instance = this;
             gameStateManager = FindObjectOfType<GameStateManager>();
             fallingWordManager = FindObjectOfType<FallingWordManager>();
+            wordBasedGamemode = FindObjectOfType<WordBasedGamemode>();
         }
         else
         {

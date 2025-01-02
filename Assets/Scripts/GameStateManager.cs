@@ -8,16 +8,20 @@ public class GameStateManager : MonoBehaviour
     public GameState gameState { get; private set; } = GameState.MainMenu;
     public GameMode gameMode { get; private set; }
     public WordGenerator.Theme theme { get; private set; }
+
+    WordBasedGamemode wordBasedGamemode;
     void SetGameState(GameState gameState)
     {
         this.gameState = gameState;
         if (gameState == GameState.Playing)
-        {
+        {   
+            wordBasedGamemode.StartWordBased();
             // Start the game
         }
     }
     void Start()
     {
+        wordBasedGamemode = ServiceLocator.Instance.wordBasedGamemode;
         // Debug stuff
         // gameState = GameState.Playing;
         // ServiceLocator.Instance.fallingWordManager.StartGame(WordGenerator.Theme.EverydayItems);
@@ -55,3 +59,4 @@ public class GameStateManager : MonoBehaviour
         Endless
     }
 }
+    
