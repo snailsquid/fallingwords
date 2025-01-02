@@ -65,7 +65,7 @@ public static class WordGenerator
     static List<List<string>> everydayItems = new List<List<string>>
             {
             new List<string>{ "Pen", "Bag", "Key", "Cup", "Mug", "Bed", "Fan", "Box", "Lid", "Pad" }, // 3 letters
-            new List<string>{ "Book", "Lamp", "Soap", "Comb", "Fork", "Bowl", "Chair", "Desk", "Shoe", "Glue" }, // 4 letters
+            new List<string>{ "Book", "Lamp", "Soap", "Comb", "Fork", "Bowl", "Desk", "Shoe", "Glue" }, // 4 letters
             new List<string>{ "Plate", "Brush", "Towel", "Clock", "Frame", "Glass", "Paper", "Knife", "Phone", "Chair" }, // 5 letters
             new List<string>{ "Remote", "Drawer", "Cushion", "Pillow", "Basket", "Marker", "Mirror", "Charger", "Bottle", "Switch" } // 6 letters
             };
@@ -185,7 +185,8 @@ public class WordsContainer
     }
     public void AddWord(string word)
     {
-        wordsOnScreen.Add(word, false);
+        if(wordsOnScreen.ContainsKey(word)){}
+        else wordsOnScreen.Add(word, false);
     }
     public void RemoveWord(string word)
     {
