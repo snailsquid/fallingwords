@@ -19,8 +19,8 @@ public class GameStateManager : MonoBehaviour
     void Start()
     {
         // Debug stuff
-        // gameState = GameState.Playing;
-        // ServiceLocator.Instance.fallingWordManager.StartGame(WordGenerator.Theme.EverydayItems);
+        gameState = GameState.Playing;
+        ServiceLocator.Instance.fallingWordManager.StartGame(WordGenerator.Theme.EverydayItems);
     }
     void SetTheme(WordGenerator.Theme theme)
     {

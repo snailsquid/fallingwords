@@ -7,8 +7,9 @@ public class FallingWordManager : MonoBehaviour
     public float initialSpeed = 1.0f;
     public float speedVariation = 0.1f;
     public float rate = 1.0f;
-    public float powerupChance = 0.1f;
-    public float trapChance = 0.07f;
+    public float specialChance = 0.1f;
+    public float powerupChance = 0.7f;
+    //public float trapChance = 0.3f;
     public Transform fallingWordPrefab, spawnArea;
     public WordGenerator.Theme theme;
     public WordsContainer wordsContainer;
@@ -19,6 +20,10 @@ public class FallingWordManager : MonoBehaviour
         this.theme = theme;
         wordsContainer = new WordsContainer(theme);
         StartCoroutine(StartGameCoroutine());
+    }
+    void Start()
+    {
+        StartGame(WordGenerator.Theme.EverydayItems);
     }
     IEnumerator StartGameCoroutine()
     {
@@ -100,6 +105,8 @@ public static class WordGenerator
             new List<string>{ "Paris", "Italy", "India", "Japan", "China", "River", "Beach", "Valley", "Tower", "Cliff" }, // 5 letters
             new List<string>{ "Canyon", "Lagoon", "Island", "Harbor", "Forest", "Brazil", "Sweden", "Canada", "Padang", "Bekasi" } // 6 letters
     };
+    static List<string> powerUp = new List<string>{"Slow","Freeze","2xBonus","3xBonus","Clear","Shield","Heal","Vigor"};
+    static List<string> trap = new List<string>{"Fast","Minus","Halfx","Blind","Shuffle","Hurt","Sick"};
 
     static readonly Dictionary<Theme, List<List<string>>> wordBank = new Dictionary<Theme, List<List<string>>>{
         { Theme.EverydayItems, everydayItems },
@@ -112,24 +119,60 @@ public static class WordGenerator
     {
         return wordBank[theme];
     }
+    public static List<string> GetWordPowerUp()
+    {
+        return powerUp;
+    }
+    public static List<string> GetWordTrap()
+    {
+        return trap;
+    }
 }
 public class WordsContainer
 {
 
     public Dictionary<string, bool> wordsOnScreen = new Dictionary<string, bool>();
     public List<List<string>> availableWords;
+    public List<string> powerUpWords;
+    public List<string> trapWords;
     public WordsContainer(WordGenerator.Theme theme)
     {
         availableWords = WordGenerator.GetWordBank(theme);
+        powerUpWords = WordGenerator.GetWordPowerUp();
+        trapWords = WordGenerator.GetWordTrap();
     }
     public string GetRandomWord()
     {
-        int randLen = GetNonEmptyIndex();
-        int randWord = Random.Range(0, availableWords[randLen].Count - 1);
-        string word = availableWords[randLen][randWord];
-        availableWords[randLen].RemoveAt(randWord);
-        AddWord(word);
-        return word;
+        int special = Random.Range(0,100);
+        //float specialChance = new FallingWordManager().specialChance;
+        if(special >= 100f*0.1)
+        {
+            int randLen = GetNonEmptyIndex();
+            int randWord = Random.Range(0, availableWords[randLen].Count - 1);
+            string word = availableWords[randLen][randWord];
+            availableWords[randLen].RemoveAt(randWord);
+            AddWord(word);
+            return word;
+        }
+        else
+        {
+            int powerUpWord = Random.Range(0,100);
+            //float powerupChance = new FallingWordManager().powerupChance;
+            if(powerUpWord <= 100f*0.7f)
+            {
+                int randWord = Random.Range(0, powerUpWords.Count - 1);
+                string word = powerUpWords[randWord];
+                AddWord(word);
+                return word;
+            }
+            else
+            {
+                int randWord = Random.Range(0, trapWords.Count - 1);
+                string word = trapWords[randWord];
+                AddWord(word);
+                return word;
+            }
+        }
     }
     int GetNonEmptyIndex()
     {
@@ -147,6 +190,8 @@ public class WordsContainer
     public void RemoveWord(string word)
     {
         wordsOnScreen.Remove(word);
-        availableWords[word.Length - 3].Add(word);
+        if(powerUpWords.Contains(word)){}
+        else if(trapWords.Contains(word)){}
+        else availableWords[word.Length - 3].Add(word);
     }
 }
