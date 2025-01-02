@@ -7,9 +7,12 @@ public class FallingWordManager : MonoBehaviour
     public float initialSpeed = 1.0f;
     public float speedVariation = 0.1f;
     public float rate = 1.0f;
+    public float powerupChance = 0.1f;
+    public float trapChance = 0.07f;
     public Transform fallingWordPrefab, spawnArea;
     public WordGenerator.Theme theme;
     public WordsContainer wordsContainer;
+    public List<FallingWordItem> wordItems = new List<FallingWordItem>();
     public void StartGame(WordGenerator.Theme theme)
     {
         Debug.Log("test");
@@ -33,8 +36,16 @@ public class FallingWordManager : MonoBehaviour
         Vector2 spawnPos = new Vector2(spawnArea.localScale.x * Random.Range(-1.0f, 1.0f) * 0.5f, spawnArea.position.y);
         Transform wordInstance = Instantiate(fallingWordPrefab, spawnPos, Quaternion.identity);
         wordInstance.GetComponent<FallingWordItem>().Set(word, speed);
+        AddWordItem(wordInstance.GetComponent<FallingWordItem>());
     }
-
+    public void AddWordItem(FallingWordItem wordItem)
+    {
+        wordItems.Add(wordItem);
+    }
+    public void RemoveWordItem(FallingWordItem wordItem)
+    {
+        wordItems.Remove(wordItem);
+    }
 }
 public static class WordGenerator
 {
