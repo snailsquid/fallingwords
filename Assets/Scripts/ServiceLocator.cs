@@ -13,16 +13,13 @@ public class ServiceLocator : MonoBehaviour
         if (Instance == null || Instance == this)
         {
             Instance = this;
-            DontDestroyOnLoad(gameObject);
+            gameStateManager = FindObjectOfType<GameStateManager>();
+            fallingWordManager = FindObjectOfType<FallingWordManager>();
         }
         else
         {
-            Destroy(gameObject);
+            Destroy(this);
+            return;
         }
-    }
-    void Start()
-    {
-        gameStateManager = FindObjectOfType<GameStateManager>();
-        fallingWordManager = FindObjectOfType<FallingWordManager>();
     }
 }

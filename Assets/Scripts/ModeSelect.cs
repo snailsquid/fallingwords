@@ -6,27 +6,14 @@ using UnityEngine;
 
 public class ModeSelect : MonoBehaviour
 {
-    [SerializeField] Transform gameManager;
-    public Button button_WordMode;
-    public Button button_TimeMode;
-    public Button button_EndlessMode;
-
+    [SerializeField] GameStateManager.GameMode gameMode;
+    Button button;
     public void Start()
     {
-        button_WordMode.onClick.AddListener(() =>
+        button = GetComponent<Button>();
+        button.onClick.AddListener(() =>
         {
-            gameManager.GetComponent<GameStateManager>().SetGameMode(GameStateManager.GameMode.Word);
-            Menu.ModetoTheme();
-        });
-        button_TimeMode.onClick.AddListener(() =>
-        {
-            gameManager.GetComponent<GameStateManager>().SetGameMode(GameStateManager.GameMode.Time);
-            Menu.ModetoTheme();
-        });
-        button_EndlessMode.onClick.AddListener(() =>
-        {
-            gameManager.GetComponent<GameStateManager>().SetGameMode(GameStateManager.GameMode.Endless);
-            Menu.ModetoTheme();
+            ServiceLocator.Instance.gameStateManager.SetGameMode(gameMode);
         });
     }
 }

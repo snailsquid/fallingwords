@@ -6,34 +6,14 @@ using UnityEngine.UI;
 
 public class ThemeSelect : MonoBehaviour
 {
-    public Button button_Eve;
-    public Button button_Foo;
-    public Button button_Ani;
-    public Button button_Tec;
-    public Button button_Geo;
-
-    [SerializeField] Transform gameManager;
+    [SerializeField] WordGenerator.Theme theme;
+    Button button;
     public void Start()
     {
-        button_Eve.onClick.AddListener(() =>
+        button = GetComponent<Button>();
+        button.onClick.AddListener(() =>
         {
-            gameManager.GetComponent<GameStateManager>().SetTheme(WordGenerator.Theme.eve);
-        });
-        button_Foo.onClick.AddListener(() =>
-        {
-            gameManager.GetComponent<GameStateManager>().SetTheme(WordGenerator.Theme.foo);
-        });
-        button_Ani.onClick.AddListener(() =>
-        {
-            gameManager.GetComponent<GameStateManager>().SetTheme(WordGenerator.Theme.ani);
-        });
-        button_Tec.onClick.AddListener(() =>
-        {
-            gameManager.GetComponent<GameStateManager>().SetTheme(WordGenerator.Theme.tec);
-        });
-        button_Geo.onClick.AddListener(() =>
-        {
-            gameManager.GetComponent<GameStateManager>().SetTheme(WordGenerator.Theme.geo);
+            ServiceLocator.Instance.gameStateManager.SetTheme(theme);
         });
     }
 }

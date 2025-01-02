@@ -5,7 +5,7 @@ using UnityEngine;
 public class GameStateManager : MonoBehaviour
 {
     public static GameStateManager Instance { get; private set; }
-    public GameState gameState { get; private set; } = GameState.MainMenu;
+    public GameState gameState { get; private set; }
     public GameMode gameMode { get; private set; }
     public WordGenerator.Theme theme { get; private set; }
     void SetGameState(GameState gameState)
@@ -15,6 +15,13 @@ public class GameStateManager : MonoBehaviour
         {
             // Start the game
         }
+    }
+    void Start()
+    {
+        SetGameState(GameState.MainMenu);
+        // Debug stuff
+        // gameState = GameState.Playing;
+        // ServiceLocator.Instance.fallingWordManager.StartGame(WordGenerator.Theme.EverydayItems);
     }
     public void SetTheme(WordGenerator.Theme theme)
     {
@@ -29,7 +36,6 @@ public class GameStateManager : MonoBehaviour
         if (Instance == null || Instance == this)
         {
             Instance = this;
-            DontDestroyOnLoad(gameObject);
         }
         else
         {
