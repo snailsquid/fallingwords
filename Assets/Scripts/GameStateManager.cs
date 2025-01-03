@@ -8,6 +8,8 @@ public class GameStateManager : MonoBehaviour
     public GameState gameState { get; private set; }
     public GameMode gameMode { get; private set; }
     public WordGenerator.Theme theme { get; private set; }
+
+    WordBasedGamemode wordBasedGamemode;
     UIManager uiManager;
     public void SetGameState(GameState gameState)
     {
@@ -19,6 +21,7 @@ public class GameStateManager : MonoBehaviour
                 uiManager.NextUI("GameOver", "MainMenu");
                 break;
             case GameState.Playing:
+                wordBasedGamemode.StartWordBased();
                 // Start the game
                 uiManager.NextUIGroup("NonPlay", "Play");
                 ServiceLocator.Instance.fallingWordManager.StartGame(theme);
@@ -42,6 +45,7 @@ public class GameStateManager : MonoBehaviour
     {
         uiManager = ServiceLocator.Instance.uiManager;
         SetGameState(GameState.MainMenu);
+        wordBasedGamemode = ServiceLocator.Instance.wordBasedGamemode;
         // Debug stuff
         // gameState = GameState.Playing;
         // ServiceLocator.Instance.fallingWordManager.StartGame(WordGenerator.Theme.EverydayItems);
