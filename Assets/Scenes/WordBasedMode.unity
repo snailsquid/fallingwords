@@ -376,7 +376,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -267, y: -149.33333}
+  m_AnchoredPosition: {x: -215.5, y: -152.5}
   m_SizeDelta: {x: 200, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &536830656
@@ -673,6 +673,7 @@ MonoBehaviour:
   gameStateManager: {fileID: 287852229}
   fallingWordManager: {fileID: 1602209230}
   wordBasedGamemode: {fileID: 0}
+  uiManager: {fileID: 0}
 --- !u!1 &1487596872
 GameObject:
   m_ObjectHideFlags: 0
@@ -686,7 +687,7 @@ GameObject:
   - component: {fileID: 1487596874}
   - component: {fileID: 1487596873}
   m_Layer: 5
-  m_Name: Canvas
+  m_Name: Canvas_PlayWordBased
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -980,9 +981,12 @@ MonoBehaviour:
   initialSpeed: 1
   speedVariation: 0.1
   rate: 1
+  powerupChance: 0.1
+  trapChance: 0.07
   fallingWordPrefab: {fileID: 4848933000920299550, guid: e4d53d39a86b20448baded3d0d43cb8c, type: 3}
   spawnArea: {fileID: 88135594}
   theme: 0
+  wordItems: []
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0

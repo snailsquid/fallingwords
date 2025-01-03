@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using AYellowpaper.SerializedCollections;
 using UnityEngine.EventSystems;
+using TMPro;
 public class UIManager : MonoBehaviour
 {
   [SerializedDictionary("UI Element", "UI Game Object")]
@@ -35,5 +36,27 @@ public class UIManager : MonoBehaviour
   {
     SetActiveGroup(nextUIGroup, true);
     SetActiveGroup(currentUIGroup, false);
+  }
+  public void SetText(string uiElement, string text)
+  {
+    if (uiElements.ContainsKey(uiElement) && uiElements[uiElement] is TMP_Text)
+    {
+      uiElements[uiElement].GetComponent<TMP_Text>().text = text;
+    }
+  }
+  public void SetGameModeUI(GameStateManager.GameMode gameMode)
+  {
+    switch (gameMode)
+    {
+      case GameStateManager.GameMode.Time:
+        SetActive("TimeMode", true);
+        break;
+      case GameStateManager.GameMode.Word:
+        SetActive("WordMode", true);
+        break;
+      case GameStateManager.GameMode.Endless:
+        SetActive("EndlessMode", true);
+        break;
+    }
   }
 }

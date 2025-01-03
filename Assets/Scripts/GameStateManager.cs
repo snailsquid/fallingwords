@@ -5,12 +5,12 @@ using UnityEngine;
 public class GameStateManager : MonoBehaviour
 {
     public static GameStateManager Instance { get; private set; }
-    public GameState gameState { get; private set; }
+    public GameState gameState;
     public GameMode gameMode { get; private set; }
     public WordGenerator.Theme theme { get; private set; }
 
-    WordBasedGamemode wordBasedGamemode;
     UIManager uiManager;
+    GameModeManager gameModeManager;
     public void SetGameState(GameState gameState)
     {
         this.gameState = gameState;
@@ -21,9 +21,10 @@ public class GameStateManager : MonoBehaviour
                 uiManager.NextUI("GameOver", "MainMenu");
                 break;
             case GameState.Playing:
-                wordBasedGamemode.StartWordBased();
                 // Start the game
-                uiManager.NextUIGroup("NonPlay", "Play");
+                uiManager.SetActiveGroup("NonPlay", false);
+                uiManager.SetGameModeUI(gameMode);
+                gameModeManager.StartGameMode(gameMode);
                 ServiceLocator.Instance.fallingWordManager.StartGame(theme);
                 break;
             case GameState.GameOver:
@@ -43,9 +44,10 @@ public class GameStateManager : MonoBehaviour
     }
     void Start()
     {
-        uiManager = ServiceLocator.Instance.uiManager;
+        ServiceLocator serviceLocator = ServiceLocator.Instance;
+        uiManager = serviceLocator.uiManager;
         SetGameState(GameState.MainMenu);
-        wordBasedGamemode = ServiceLocator.Instance.wordBasedGamemode;
+        gameModeManager = serviceLocator.gameModeManager;
         // Debug stuff
         // gameState = GameState.Playing;
         // ServiceLocator.Instance.fallingWordManager.StartGame(WordGenerator.Theme.EverydayItems);
