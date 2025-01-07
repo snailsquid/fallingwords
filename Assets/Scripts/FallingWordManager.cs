@@ -14,6 +14,11 @@ public class FallingWordManager : MonoBehaviour
     public WordGenerator.Theme theme;
     public WordsContainer wordsContainer;
     public List<FallingWordItem> wordItems = new List<FallingWordItem>();
+    static public Typing typing;
+    void Start()
+    {
+        typing = ServiceLocator.Instance.typing;
+    }
     public void StartGame(WordGenerator.Theme theme)
     {
         Debug.Log("test");
@@ -138,10 +143,6 @@ public class WordsContainer
         powerUpWords = WordGenerator.GetWordPowerUp();
         trapWords = WordGenerator.GetWordTrap();
     }
-    void Start()
-    {
-        typing = ServiceLocator.Instance.typing;
-    }
     public string GetRandomWord()
     {
         int special = Random.Range(0,100);
@@ -190,7 +191,7 @@ public class WordsContainer
         else 
         {
             wordsOnScreen.Add(word, false);
-            typing.addTheWords(word);
+            FallingWordManager.typing.addTheWords(word);
         }
     }
     public void RemoveWord(string word)
@@ -201,7 +202,7 @@ public class WordsContainer
         else 
         {
             availableWords[word.Length - 3].Add(word);
-            typing.removeTheWords(word);
+            FallingWordManager.typing.removeTheWords(word);
         }
     }
 }

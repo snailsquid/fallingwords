@@ -1,20 +1,14 @@
-using System.Linq;
+using System.Collections;
 using System.Collections.Generic;
-using TMPro;
 using UnityEngine;
-using UnityEngine.UI;
 
 public class Typing : MonoBehaviour
 {
-    public Dictionary<string, bool> theWords = new Dictionary<string, bool>()
-    {{"tes",false}};
+    public Dictionary<string, bool> theWords = new Dictionary<string, bool>();
     public int totalScore;
     public float time = 0f;
     private int Accuracy = 0;
-    //public Wordbank wordBank;
-    public TMP_Text wordOutput;
-    //public Text scoreOutput;
-    private string remainingWord = string.Empty;
+    public string remainingWord = string.Empty;
     private string currentWord = string.Empty;
     public void addTheWords(string words)
     {
@@ -28,39 +22,20 @@ public class Typing : MonoBehaviour
             theWords.Remove(word);
         }
     }
-
     private void setRemainingWord(string newWord)
     {
         remainingWord = newWord;
-        wordOutput.text = remainingWord;
     }
     void Update()
     {
         time += Time.deltaTime;
         checkInput();
-        foreach(string item in theWords.Keys.ToList())
-        {
-            if(remainingWord != "")
-            {
-                if((item.StartsWith(remainingWord))&&(theWords[item] == false))
-                {
-                    theWords[item] = true;
-                    Debug.Log(item);
-                    Debug.Log(theWords[item]);
-                }
-                else if((theWords[item] == true)&&(!item.StartsWith(remainingWord)))
-                {
-                    theWords[item] = false;
-                    Debug.Log(item);
-                    Debug.Log(theWords[item]);
-                }
-            }
-        }
     }
     private void checkInput()
     {
         if(Input.GetKeyDown(KeyCode.Return))
         {
+            Debug.Log("tes");
             isCorrect(remainingWord);
         }
         else if(Input.GetKeyDown(KeyCode.Backspace))
@@ -82,8 +57,10 @@ public class Typing : MonoBehaviour
     }
     private void isCorrect(string letter)
     {
+        Debug.Log("tes2");
         if(theWords.ContainsKey(letter))
         {
+            Debug.Log("Correct");
             if(theWords[letter]==true)
             //if(letter == currentWord)
             {
@@ -109,11 +86,14 @@ public class Typing : MonoBehaviour
     private void removeLetter()
     {
         int Index = remainingWord.Length;
-        string newString = remainingWord.Remove((Index-1),1);
-        setRemainingWord(newString);
-        if(Accuracy> -2)
+        if(Index >0)
         {
-            Accuracy -= 1;
+            string newString = remainingWord.Remove((Index-1),1);
+            setRemainingWord(newString);
+            if(Accuracy> -2)
+            {
+                Accuracy -= 1;
+            }
         }
     }
     private void submitWord()
@@ -133,4 +113,8 @@ public class Typing : MonoBehaviour
         }
         //scoreOutput.text = totalScore.ToString();
     }
+}
+public class Typer 
+{
+    
 }

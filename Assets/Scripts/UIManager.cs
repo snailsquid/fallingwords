@@ -46,6 +46,7 @@ public class UIManager : MonoBehaviour
   }
   public void SetGameModeUI(GameStateManager.GameMode gameMode)
   {
+    SetActive("TypingUI",true);
     switch (gameMode)
     {
       case GameStateManager.GameMode.Time:
