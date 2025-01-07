@@ -15,6 +15,7 @@ public class FallingWordManager : MonoBehaviour
     public WordsContainer wordsContainer;
     public List<FallingWordItem> wordItems = new List<FallingWordItem>();
     static public Typing typing;
+    static public FallingWordItem fallingWordItem;
     void Start()
     {
         typing = ServiceLocator.Instance.typing;

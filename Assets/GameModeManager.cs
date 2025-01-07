@@ -33,6 +33,7 @@ public class GameModeManager : MonoBehaviour
     }
     void Update()
     {
+        uiManager.SetText("TypingText", typing.remainingWord);
         if (game != null)
         {
             if (game.GetType() == typeof(TimeMode))
@@ -48,7 +49,6 @@ public class GameModeManager : MonoBehaviour
 public abstract class Game
 {
     protected UIManager uiManager;
-    Typer typer;
     public string uiElement;
     public abstract void StartGame();
     public void SetUIManager()
@@ -63,7 +63,7 @@ public abstract class Game
     {
         if (uiElement == null || uiManager == null) return;
         uiManager.SetText(uiElement, currentValue + "/" + maxValue);
-        uiManager.SetText("TypingText", GameModeManager.typing.remainingWord);
+        
     }
 }
 public class TimeMode : Game

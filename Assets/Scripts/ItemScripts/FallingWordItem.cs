@@ -6,7 +6,8 @@ using UnityEngine;
 
 public class FallingWordItem : MonoBehaviour
 {
-    public float speed = 1.0f;
+    public float speed = -1.0f;
+    public float stop = 1.0f;
     public string word = "example";
     [SerializeField] private TMP_Text text;
     FallingWordManager fallingWordManager;
@@ -23,7 +24,7 @@ public class FallingWordItem : MonoBehaviour
     }
     void Update()
     {
-        transform.Translate(Vector3.down * speed * Time.deltaTime);
+        transform.Translate(Vector3.down * speed *stop * Time.deltaTime);
     }
     void OnTriggerEnter2D(Collider2D collision)
     {
@@ -31,7 +32,7 @@ public class FallingWordItem : MonoBehaviour
         if (collision.gameObject.CompareTag("Despawner"))
         {
             Despawn();
-            Destroy(gameObject);
+            Destroyme();
         }
     }
     void Despawn()
@@ -39,4 +40,9 @@ public class FallingWordItem : MonoBehaviour
         fallingWordManager.wordsContainer.RemoveWord(word);
         fallingWordManager.RemoveWordItem(this);
     }
+    public void Destroyme()
+    {
+        Destroy(gameObject);
+    }
+    
 }
