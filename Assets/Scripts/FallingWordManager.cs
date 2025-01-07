@@ -21,10 +21,6 @@ public class FallingWordManager : MonoBehaviour
         wordsContainer = new WordsContainer(theme);
         StartCoroutine(StartGameCoroutine());
     }
-    void Start()
-    {
-        StartGame(WordGenerator.Theme.EverydayItems);
-    }
     IEnumerator StartGameCoroutine()
     {
         while (GameStateManager.Instance.gameState == GameStateManager.GameState.Playing)
