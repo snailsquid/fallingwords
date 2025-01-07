@@ -7,7 +7,7 @@ public class ServiceLocator : MonoBehaviour
     public static ServiceLocator Instance { get; private set; }
     public GameStateManager gameStateManager;
     public FallingWordManager fallingWordManager;
-
+    public Typing typing;
     public UIManager uiManager;
     public GameModeManager gameModeManager;
 
@@ -20,6 +20,7 @@ public class ServiceLocator : MonoBehaviour
             fallingWordManager = FindObjectOfType<FallingWordManager>();
             uiManager = FindObjectOfType<UIManager>();
             gameModeManager = FindObjectOfType<GameModeManager>();
+            typing = FindObjectOfType<Typing>();
         }
         else
         {

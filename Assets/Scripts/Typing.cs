@@ -6,7 +6,8 @@ using UnityEngine.UI;
 
 public class Typing : MonoBehaviour
 {
-    private Dictionary<string, bool> theWords = new Dictionary<string, bool>();
+    public Dictionary<string, bool> theWords = new Dictionary<string, bool>()
+    {{"tes",false}};
     public int totalScore;
     public float time = 0f;
     private int Accuracy = 0;
@@ -15,10 +16,10 @@ public class Typing : MonoBehaviour
     //public Text scoreOutput;
     private string remainingWord = string.Empty;
     private string currentWord = string.Empty;
-    public void addTheWords(string word)
+    public void addTheWords(string words)
     {
-        if(theWords.ContainsKey(word)){}
-        else theWords.Add(word, false);
+        if(theWords.ContainsKey(words)){}
+        else theWords.Add(words, false);
     }
     public void removeTheWords(string word)
     {

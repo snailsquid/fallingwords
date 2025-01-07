@@ -7,8 +7,8 @@ public class FallingWordManager : MonoBehaviour
     public float initialSpeed = 1.0f;
     public float speedVariation = 0.1f;
     public float rate = 1.0f;
-    public float specialChance = 0.1f;
-    public float powerupChance = 0.7f;
+    public static float specialChance = 0.1f;
+    public static float powerupChance = 0.7f;
     //public float trapChance = 0.3f;
     public Transform fallingWordPrefab, spawnArea;
     public WordGenerator.Theme theme;
@@ -126,23 +126,27 @@ public static class WordGenerator
 }
 public class WordsContainer
 {
-
+    
     public Dictionary<string, bool> wordsOnScreen = new Dictionary<string, bool>();
     public List<List<string>> availableWords;
     public List<string> powerUpWords;
     public List<string> trapWords;
-    public Typing typing;
+    Typing typing;
     public WordsContainer(WordGenerator.Theme theme)
     {
         availableWords = WordGenerator.GetWordBank(theme);
         powerUpWords = WordGenerator.GetWordPowerUp();
         trapWords = WordGenerator.GetWordTrap();
     }
+    void Start()
+    {
+        typing = ServiceLocator.Instance.typing;
+    }
     public string GetRandomWord()
     {
         int special = Random.Range(0,100);
         //float specialChance = new FallingWordManager().specialChance;
-        if(special >= 100f*0.1)
+        if(special >= 100f*FallingWordManager.specialChance)
         {
             int randLen = GetNonEmptyIndex();
             int randWord = Random.Range(0, availableWords[randLen].Count - 1);
@@ -155,7 +159,7 @@ public class WordsContainer
         {
             int powerUpWord = Random.Range(0,100);
             //float powerupChance = new FallingWordManager().powerupChance;
-            if(powerUpWord <= 100f*0.7f)
+            if(powerUpWord <= 100f*FallingWordManager.powerupChance)
             {
                 int randWord = Random.Range(0, powerUpWords.Count - 1);
                 string word = powerUpWords[randWord];
@@ -186,7 +190,7 @@ public class WordsContainer
         else 
         {
             wordsOnScreen.Add(word, false);
-            //typing.addTheWords(word);
+            typing.addTheWords(word);
         }
     }
     public void RemoveWord(string word)
@@ -197,7 +201,7 @@ public class WordsContainer
         else 
         {
             availableWords[word.Length - 3].Add(word);
-            //typing.removeTheWords(word);
+            typing.removeTheWords(word);
         }
     }
 }
