@@ -12,9 +12,9 @@ public class score : MonoBehaviour
     public int totalscore = 0;
     public void addscore(float accuracy, float speed, int wordcomplex)
     {
-        float score = (100*wordcomplex)+(accuracy*20)-speed;
+        float score = (100 * wordcomplex) + (accuracy * 20) - speed;
         int roundedscore = (int)Math.Round(score);
         totalscore += roundedscore;
-        //text.text = totalscore.ToString();
+        text.text = totalscore.ToString();
     }
 }

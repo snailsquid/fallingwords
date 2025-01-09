@@ -19,11 +19,13 @@ public class GameStateManager : MonoBehaviour
             case GameState.MainMenu:
                 // Show the main menu
                 uiManager.NextUI("GameOver", "MainMenu");
+                uiManager.SetActive("ScoreCanvas", false);
                 break;
             case GameState.Playing:
                 // Start the game
                 uiManager.SetActiveGroup("NonPlay", false);
                 uiManager.SetGameModeUI(gameMode);
+                uiManager.SetActive("ScoreCanvas", true);
                 gameModeManager.StartGameMode(gameMode);
                 ServiceLocator.Instance.fallingWordManager.StartGame(theme);
                 break;
@@ -31,6 +33,7 @@ public class GameStateManager : MonoBehaviour
                 // Show the game over screen
                 uiManager.SetActiveGroup("Play", false);
                 uiManager.SetActive("GameOver", true);
+                uiManager.SetActive("ScoreCanvas", true);
                 break;
             case GameState.ModeSelect:
                 // Show the mode select screen

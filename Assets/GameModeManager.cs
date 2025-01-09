@@ -6,7 +6,7 @@ public class GameModeManager : MonoBehaviour
 {
     UIManager uiManager;
     GameStateManager gameStateManager;
-    Game game;
+    public Game game;
     [SerializeField] float maxTime;
     [SerializeField] int maxWord, maxLife;
     static public Typing typing;
@@ -36,7 +36,7 @@ public class GameModeManager : MonoBehaviour
         uiManager.SetText("TypingText", typing.remainingWord);
         if (game != null)
         {
-            if (game.GetType() == typeof(TimeMode))
+            if (game.GetType() == typeof(TimeMode) && gameStateManager.gameState == GameStateManager.GameState.Playing)
             {
                 TimeMode timeMode = (TimeMode)game;
                 timeMode.AddTime(Time.deltaTime);
@@ -49,6 +49,7 @@ public class GameModeManager : MonoBehaviour
 public abstract class Game
 {
     protected UIManager uiManager;
+    protected GameStateManager gameStateManager;
     public string uiElement;
     public abstract void StartGame();
     public void SetUIManager()
@@ -58,12 +59,13 @@ public abstract class Game
     public void EndGame()
     {
         ServiceLocator.Instance.gameStateManager.SetGameState(GameStateManager.GameState.GameOver);
+        ServiceLocator.Instance.fallingWordManager.Reset();
     }
     public void UpdateUI(string currentValue, string maxValue)
     {
         if (uiElement == null || uiManager == null) return;
         uiManager.SetText(uiElement, currentValue + "/" + maxValue);
-        
+
     }
 }
 public class TimeMode : Game
@@ -88,7 +90,7 @@ public class TimeMode : Game
     public void SetTime(float time)
     {
         timePassed = time;
-        UpdateUI(timePassed.ToString(), maxTime.ToString());
+        UpdateUI(Mathf.RoundToInt(time).ToString(), maxTime.ToString());
         if (timePassed >= maxTime)
         {
             EndGame();

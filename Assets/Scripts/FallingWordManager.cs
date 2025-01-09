@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class FallingWordManager : MonoBehaviour
@@ -13,7 +14,7 @@ public class FallingWordManager : MonoBehaviour
     public Transform fallingWordPrefab, spawnArea;
     public WordGenerator.Theme theme;
     public WordsContainer wordsContainer;
-    public List<FallingWordItem> wordItems = new List<FallingWordItem>();
+    public Dictionary<string, FallingWordItem> wordItems = new Dictionary<string, FallingWordItem>();
     static public Typing typing;
     static public FallingWordItem fallingWordItem;
     void Start()
@@ -22,7 +23,6 @@ public class FallingWordManager : MonoBehaviour
     }
     public void StartGame(WordGenerator.Theme theme)
     {
-        Debug.Log("test");
         this.theme = theme;
         wordsContainer = new WordsContainer(theme);
         StartCoroutine(StartGameCoroutine());
@@ -47,11 +47,20 @@ public class FallingWordManager : MonoBehaviour
     }
     public void AddWordItem(FallingWordItem wordItem)
     {
-        wordItems.Add(wordItem);
+        wordItems.Add(wordItem.word, wordItem);
     }
     public void RemoveWordItem(FallingWordItem wordItem)
     {
-        wordItems.Remove(wordItem);
+        wordItems.Remove(wordItem.word);
+    }
+    public void Reset()
+    {
+        foreach (FallingWordItem wordItem in wordItems.Values)
+        {
+            Destroy(wordItem.gameObject);
+        }
+        wordItems.Clear();
+        wordsContainer.Reset(theme);
     }
 }
 public static class WordGenerator
@@ -107,8 +116,8 @@ public static class WordGenerator
             new List<string>{ "Paris", "Italy", "India", "Japan", "China", "River", "Beach", "Valley", "Tower", "Cliff" }, // 5 letters
             new List<string>{ "Canyon", "Lagoon", "Island", "Harbor", "Forest", "Brazil", "Sweden", "Canada", "Padang", "Bekasi" } // 6 letters
     };
-    static List<string> powerUp = new List<string>{"Slow","Freeze","2xBonus","3xBonus","Clear","Shield","Heal","Vigor"};
-    static List<string> trap = new List<string>{"Fast","Minus","Halfx","Blind","Shuffle","Hurt","Sick"};
+    static List<string> powerUp = new List<string> { "Slow", "Freeze", "2xBonus", "3xBonus", "Clear", "Shield", "Heal", "Vigor" };
+    static List<string> trap = new List<string> { "Fast", "Minus", "Halfx", "Blind", "Shuffle", "Hurt", "Sick" };
 
     static readonly Dictionary<Theme, List<List<string>>> wordBank = new Dictionary<Theme, List<List<string>>>{
         { Theme.EverydayItems, everydayItems },
@@ -117,54 +126,91 @@ public static class WordGenerator
         { Theme.Technology, technology },
         { Theme.Geography, geography }
     };
+    public enum WordType
+    {
+        PowerUp, Trap, Normal
+    }
     public static List<List<string>> GetWordBank(Theme theme)
     {
-        return wordBank[theme];
+        return wordBank[theme].ToList();
     }
     public static List<string> GetWordPowerUp()
     {
-        return powerUp;
+        return powerUp.ToList();
     }
     public static List<string> GetWordTrap()
     {
-        return trap;
+        return trap.ToList();
+    }
+    public static bool Is(string word, WordType wordType)
+    {
+        if (wordType == WordType.PowerUp)
+        {
+            return powerUp.Contains(word);
+        }
+        else if (wordType == WordType.Trap)
+        {
+            return trap.Contains(word);
+        }
+        else
+        {
+            return !powerUp.Contains(word) && !trap.Contains(word);
+        }
+
     }
 }
 public class WordsContainer
 {
-    
-    public Dictionary<string, bool> wordsOnScreen = new Dictionary<string, bool>();
+
+    public Dictionary<string, bool> wordsOnScreen;
     public List<List<string>> availableWords;
     public List<string> powerUpWords;
     public List<string> trapWords;
     Typing typing;
     public WordsContainer(WordGenerator.Theme theme)
     {
+        Reset(theme);
+    }
+    public void Reset(WordGenerator.Theme theme)
+    {
         availableWords = WordGenerator.GetWordBank(theme);
         powerUpWords = WordGenerator.GetWordPowerUp();
         trapWords = WordGenerator.GetWordTrap();
+        wordsOnScreen = new Dictionary<string, bool>();
     }
     public string GetRandomWord()
     {
-        int special = Random.Range(0,100);
+        int special = Random.Range(0, 100);
         //float specialChance = new FallingWordManager().specialChance;
-        if(special >= 100f*FallingWordManager.specialChance)
+        if (special >= 100f * FallingWordManager.specialChance)
         {
             int randLen = GetNonEmptyIndex();
             int randWord = Random.Range(0, availableWords[randLen].Count - 1);
             string word = availableWords[randLen][randWord];
+            string sumWords = "";
+            foreach (List<string> item in availableWords)
+            {
+                foreach (string wordItem in item)
+                {
+                    sumWords += wordItem + " ";
+                }
+                sumWords += "\n";
+            }
+            Debug.Log(sumWords);
             availableWords[randLen].RemoveAt(randWord);
+            Debug.Log(sumWords);
             AddWord(word);
             return word;
         }
         else
         {
-            int powerUpWord = Random.Range(0,100);
+            int powerUpWord = Random.Range(0, 100);
             //float powerupChance = new FallingWordManager().powerupChance;
-            if(powerUpWord <= 100f*FallingWordManager.powerupChance)
+            if (powerUpWord <= 100f * FallingWordManager.powerupChance)
             {
                 int randWord = Random.Range(0, powerUpWords.Count - 1);
                 string word = powerUpWords[randWord];
+                powerUpWords.RemoveAt(randWord);
                 AddWord(word);
                 return word;
             }
@@ -172,6 +218,7 @@ public class WordsContainer
             {
                 int randWord = Random.Range(0, trapWords.Count - 1);
                 string word = trapWords[randWord];
+                trapWords.RemoveAt(randWord);
                 AddWord(word);
                 return word;
             }
@@ -188,22 +235,29 @@ public class WordsContainer
     }
     public void AddWord(string word)
     {
-        if(wordsOnScreen.ContainsKey(word)){}
-        else 
+        if (FallingWordManager.typing.theWords.ContainsKey(word)) { }
+        else
         {
-            wordsOnScreen.Add(word, false);
             FallingWordManager.typing.addTheWords(word);
         }
     }
     public void RemoveWord(string word)
     {
-        wordsOnScreen.Remove(word);
-        if(powerUpWords.Contains(word)){}
-        else if(trapWords.Contains(word)){}
-        else 
+        Debug.Log(WordGenerator.Is(word, WordGenerator.WordType.PowerUp));
+        Debug.Log(WordGenerator.Is(word, WordGenerator.WordType.Trap));
+        Debug.Log(WordGenerator.Is(word, WordGenerator.WordType.Normal));
+        if (WordGenerator.Is(word, WordGenerator.WordType.PowerUp) && !powerUpWords.Contains(word))
+        {
+            powerUpWords.Add(word);
+        }
+        else if (WordGenerator.Is(word, WordGenerator.WordType.Trap) && !trapWords.Contains(word))
+        {
+            trapWords.Add(word);
+        }
+        else if (WordGenerator.Is(word, WordGenerator.WordType.Normal) && !availableWords[word.Length - 3].Contains(word))
         {
             availableWords[word.Length - 3].Add(word);
-            FallingWordManager.typing.removeTheWords(word);
         }
+        FallingWordManager.typing.removeTheWords(word);
     }
 }

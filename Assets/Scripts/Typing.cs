@@ -16,25 +16,21 @@ public class Typing : MonoBehaviour
     public FallingWordItem fallingWordItem;
     GameStateManager gameStateManager;
     GameModeManager gameModeManager;
-    WordMode wordMode;
-    Game game;
     score score;
     void Start()
     {
         fallingWordManager = ServiceLocator.Instance.fallingWordManager;
         gameStateManager = ServiceLocator.Instance.gameStateManager;
         gameModeManager = ServiceLocator.Instance.gameModeManager;
-        wordMode = (WordMode)game;
         score = GameObject.FindWithTag("Player").GetComponent<score>();
     }
     public void addTheWords(string words)
     {
-        if(theWords.ContainsKey(words)){}
-        else theWords.Add(words, false);
+        if (!theWords.ContainsKey(words)) theWords.Add(words, false);
     }
     public void removeTheWords(string word)
     {
-        if(theWords.ContainsKey(word))
+        if (theWords.ContainsKey(word))
         {
             theWords.Remove(word);
         }
@@ -47,39 +43,35 @@ public class Typing : MonoBehaviour
     {
         time += Time.deltaTime;
         checkInput();
-        foreach(string item in theWords.Keys.ToList())
+        foreach (string item in theWords.Keys.ToList())
         {
-            if(remainingWord != "")
+            if (remainingWord != "")
             {
-                if((item.StartsWith(remainingWord))&&(theWords[item] == false))
+                if ((item.StartsWith(remainingWord)) && (theWords[item] == false))
                 {
                     theWords[item] = true;
-                    Debug.Log(item);
-                    Debug.Log(theWords[item]);
                 }
-                else if((theWords[item] == true)&&(!item.StartsWith(remainingWord)))
+                else if ((theWords[item] == true) && (!item.StartsWith(remainingWord)))
                 {
                     theWords[item] = false;
-                    Debug.Log(item);
-                    Debug.Log(theWords[item]);
                 }
             }
         }
     }
     private void checkInput()
     {
-        if(Input.GetKeyDown(KeyCode.Return))
+        if (Input.GetKeyDown(KeyCode.Return))
         {
             isCorrect(remainingWord);
         }
-        else if(Input.GetKeyDown(KeyCode.Backspace))
+        else if (Input.GetKeyDown(KeyCode.Backspace))
         {
             removeLetter();
         }
-        else if(Input.anyKeyDown)
+        else if (Input.anyKeyDown)
         {
             string keyPressed = Input.inputString;
-            if(keyPressed.Length == 1)
+            if (keyPressed.Length == 1)
             {
                 enterWord(keyPressed);
             }
@@ -122,88 +114,74 @@ public class Typing : MonoBehaviour
     }
     private void isCorrect(string letter)
     {
-        if(theWords.ContainsKey(letter))
+        if (theWords.ContainsKey(letter))
         {
-            if(theWords[letter]==true)
+            if (theWords[letter] == true)
             {
-                Debug.Log(letter+" Correct");
+                Debug.Log(letter + " Correct");
                 Debug.Log(Accuracy);
-                score.addscore(Accuracy,Mathf.Floor(time),letter.Length);
+                score.addscore(Accuracy, Mathf.Floor(time), letter.Length);
                 submitWord();
                 fallingWordManager.wordsContainer.RemoveWord(letter);
-                //fallingWordItem.Destroyme(); - To destroy the word in screen (not working)
-                if(letter == "Slow")
+                fallingWordManager.wordItems[letter].Despawn();
+                switch (letter)
                 {
-                    StartCoroutine(StartSlowCoroutine());
+                    case "Slow":
+                        StartCoroutine(StartSlowCoroutine());
+                        break;
+                    case "Freeze":
+                        StartCoroutine(StartFreezeCoroutine());
+                        break;
+                    case "Fast":
+                        StartCoroutine(StartFastCoroutine());
+                        break;
+                    case "2xBonus":
+                        break;
+                    case "3xBonus":
+                        break;
+                    case "Clear":
+                        break;
+                    case "Minus":
+                        break;
+                    case "Halfx":
+                        break;
+                    case "Blind":
+                        break;
+                    case "Shuffle":
+                        break;
+
                 }
-                else if(letter == "Freeze")
+                if (gameStateManager.gameMode == GameStateManager.GameMode.Endless)
                 {
-                    StartCoroutine(StartFreezeCoroutine());
-                }
-                else if(letter == "2xBonus")
-                {
-                      
-                }
-                else if(letter == "3xBonus")
-                {
-                      
-                }
-                else if(letter == "Clear")
-                {
-                      
-                }
-                else if(letter == "Fast")
-                {
-                    StartCoroutine(StartFastCoroutine());  
-                }
-                else if(letter == "Minus")
-                {
-                      
-                }
-                else if(letter == "Halfx")
-                {
-                      
-                }
-                else if(letter == "Blind")
-                {
-                      
-                }
-                else if(letter == "Shuffle")
-                {
-                    
-                }
-                if(gameStateManager.gameMode == GameStateManager.GameMode.Endless)
-                {
-                    if(letter == "Shield")
+                    if (letter == "Shield")
                     {
-                        
+
                     }
-                    else if(letter == "Heal")
+                    else if (letter == "Heal")
                     {
-                        
+
                     }
-                    else if(letter == "Vigor")
+                    else if (letter == "Vigor")
                     {
-                        
+
                     }
-                    else if(letter == "Hurt")
+                    else if (letter == "Hurt")
                     {
-                        
+
                     }
-                    else if(letter == "Sick")
+                    else if (letter == "Sick")
                     {
-                        
+
                     }
                 }
-                if (gameStateManager.gameMode == GameStateManager.GameMode.Word)
+                if (gameModeManager.game is WordMode wordMode)
                 {
-                    Debug.Log("wording");
-                    //wordMode.AddWordCounter();
+                    wordMode.AddWordCounter();
                 }
             }
         }
         else
-       {
+        {
             Debug.Log("Nice person you typo");
             submitWord();
         }
@@ -211,18 +189,18 @@ public class Typing : MonoBehaviour
     private void addLetter(string add)
     {
         int Index = remainingWord.Length;
-        string newString = remainingWord.Insert(Index,add);
+        string newString = remainingWord.Insert(Index, add);
         setRemainingWord(newString);
-        
+
     }
     private void removeLetter()
     {
         int Index = remainingWord.Length;
-        if(Index >0)
+        if (Index > 0)
         {
-            string newString = remainingWord.Remove((Index-1),1);
+            string newString = remainingWord.Remove((Index - 1), 1);
             setRemainingWord(newString);
-            if(Accuracy> -2)
+            if (Accuracy > -2)
             {
                 Accuracy -= 1;
             }
@@ -231,7 +209,7 @@ public class Typing : MonoBehaviour
     private void submitWord()
     {
         int Index = remainingWord.Length;
-        string newString = remainingWord.Remove(0,Index);
+        string newString = remainingWord.Remove(0, Index);
         setRemainingWord(newString);
         Accuracy = 0;
         time = 0;

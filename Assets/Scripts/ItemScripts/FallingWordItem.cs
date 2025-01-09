@@ -24,25 +24,22 @@ public class FallingWordItem : MonoBehaviour
     }
     void Update()
     {
-        transform.Translate(Vector3.down * speed *stop * Time.deltaTime);
+        transform.Translate(Vector3.down * speed * stop * Time.deltaTime);
     }
     void OnTriggerEnter2D(Collider2D collision)
     {
-        Debug.Log("trigger");
         if (collision.gameObject.CompareTag("Despawner"))
         {
             Despawn();
-            Destroyme();
+            Game game = ServiceLocator.Instance.gameModeManager.game;
+            if (game is EndlessMode endlessMode)
+                endlessMode.RemoveLife();
         }
     }
-    void Despawn()
+    public void Despawn()
     {
         fallingWordManager.wordsContainer.RemoveWord(word);
         fallingWordManager.RemoveWordItem(this);
-    }
-    public void Destroyme()
-    {
         Destroy(gameObject);
     }
-    
 }
