@@ -5,7 +5,7 @@ using UnityEngine;
 public class GameStateManager : MonoBehaviour
 {
     public static GameStateManager Instance { get; private set; }
-    public GameState gameState;
+    public GameState gameState { get; private set; }
     public GameMode gameMode { get; private set; }
     public WordGenerator.Theme theme { get; private set; }
 

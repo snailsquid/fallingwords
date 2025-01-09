@@ -13,10 +13,19 @@ public class Typing : MonoBehaviour
     public string remainingWord = string.Empty;
     private string currentWord = string.Empty;
     static public FallingWordManager fallingWordManager;
-     public FallingWordItem fallingWordItem;
+    public FallingWordItem fallingWordItem;
+    GameStateManager gameStateManager;
+    GameModeManager gameModeManager;
+    WordMode wordMode;
+    Game game;
+    score score;
     void Start()
     {
         fallingWordManager = ServiceLocator.Instance.fallingWordManager;
+        gameStateManager = ServiceLocator.Instance.gameStateManager;
+        gameModeManager = ServiceLocator.Instance.gameModeManager;
+        wordMode = (WordMode)game;
+        score = GameObject.FindWithTag("Player").GetComponent<score>();
     }
     public void addTheWords(string words)
     {
@@ -90,6 +99,16 @@ public class Typing : MonoBehaviour
         }
         fallingWordManager.initialSpeed = 1.0f;
     }
+    IEnumerator StartFastCoroutine()
+    {
+        float time = 0f;
+        while (time <= nSeconds)
+        {
+            fallingWordManager.initialSpeed = 2.0f;
+            yield return time += Time.deltaTime;
+        }
+        fallingWordManager.initialSpeed = 1.0f;
+    }
     IEnumerator StartFreezeCoroutine()
     {
         fallingWordItem = GameObject.FindWithTag("WordItem").GetComponent<FallingWordItem>();
@@ -109,10 +128,10 @@ public class Typing : MonoBehaviour
             {
                 Debug.Log(letter+" Correct");
                 Debug.Log(Accuracy);
-                addScore(letter,Accuracy,Mathf.Floor(time));
+                score.addscore(Accuracy,Mathf.Floor(time),letter.Length);
                 submitWord();
                 fallingWordManager.wordsContainer.RemoveWord(letter);
-                //fallingWordItem.Destroyme();
+                //fallingWordItem.Destroyme(); - To destroy the word in screen (not working)
                 if(letter == "Slow")
                 {
                     StartCoroutine(StartSlowCoroutine());
@@ -121,12 +140,71 @@ public class Typing : MonoBehaviour
                 {
                     StartCoroutine(StartFreezeCoroutine());
                 }
+                else if(letter == "2xBonus")
+                {
+                      
+                }
+                else if(letter == "3xBonus")
+                {
+                      
+                }
+                else if(letter == "Clear")
+                {
+                      
+                }
+                else if(letter == "Fast")
+                {
+                    StartCoroutine(StartFastCoroutine());  
+                }
+                else if(letter == "Minus")
+                {
+                      
+                }
+                else if(letter == "Halfx")
+                {
+                      
+                }
+                else if(letter == "Blind")
+                {
+                      
+                }
+                else if(letter == "Shuffle")
+                {
+                    
+                }
+                if(gameStateManager.gameMode == GameStateManager.GameMode.Endless)
+                {
+                    if(letter == "Shield")
+                    {
+                        
+                    }
+                    else if(letter == "Heal")
+                    {
+                        
+                    }
+                    else if(letter == "Vigor")
+                    {
+                        
+                    }
+                    else if(letter == "Hurt")
+                    {
+                        
+                    }
+                    else if(letter == "Sick")
+                    {
+                        
+                    }
+                }
+                if (gameStateManager.gameMode == GameStateManager.GameMode.Word)
+                {
+                    Debug.Log("wording");
+                    //wordMode.AddWordCounter();
+                }
             }
         }
         else
        {
             Debug.Log("Nice person you typo");
-            StartCoroutine(StartFreezeCoroutine());
             submitWord();
         }
     }
@@ -158,17 +236,4 @@ public class Typing : MonoBehaviour
         Accuracy = 0;
         time = 0;
     }
-    private void addScore(string word,int akurasi,float speed)
-    {
-        int score = (100*word.Length)+(akurasi*20)-((int)speed);
-        if(score >= 0)
-        {
-            totalScore += score;
-        }
-        //scoreOutput.text = totalScore.ToString();
-    }
-}
-public class Typer 
-{
-    
 }
