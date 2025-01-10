@@ -10,6 +10,7 @@ public class Typing : MonoBehaviour
     public int totalScore;
     public float time = 0f;
     private int Accuracy = 0;
+    private int Bonus = 1;
     public string remainingWord = string.Empty;
     private string currentWord = string.Empty;
     static public FallingWordManager fallingWordManager;
@@ -112,6 +113,26 @@ public class Typing : MonoBehaviour
         }
         fallingWordItem.stop = 1.0f;
     }
+    IEnumerator Start2xBonusCoroutine()
+    {
+        float time = 0f;
+        while (time <= nSeconds)
+        {
+            Bonus = 2;
+            yield return time += Time.deltaTime;
+        }
+        Bonus = 1;
+    }
+    IEnumerator Start3xBonusCoroutine()
+    {
+        float time = 0f;
+        while (time <= nSeconds)
+        {
+            Bonus = 3;
+            yield return time += Time.deltaTime;
+        }
+        Bonus = 1;
+    }
     private void isCorrect(string letter)
     {
         if (theWords.ContainsKey(letter))
@@ -119,8 +140,8 @@ public class Typing : MonoBehaviour
             if (theWords[letter] == true)
             {
                 Debug.Log(letter + " Correct");
-                Debug.Log(Accuracy);
-                score.addscore(Accuracy, Mathf.Floor(time), letter.Length);
+                Debug.Log(Bonus.ToString()+" "+ Accuracy.ToString()+" "+ Mathf.Floor(time).ToString()+" "+ letter.Length.ToString());
+                score.addscore(Bonus, Accuracy, Mathf.Floor(time), letter.Length);
                 submitWord();
                 fallingWordManager.wordsContainer.RemoveWord(letter);
                 fallingWordManager.wordItems[letter].Despawn();
@@ -136,12 +157,16 @@ public class Typing : MonoBehaviour
                         StartCoroutine(StartFastCoroutine());
                         break;
                     case "2xBonus":
+                        StartCoroutine(Start2xBonusCoroutine());
                         break;
                     case "3xBonus":
+                        StartCoroutine(Start3xBonusCoroutine());
                         break;
                     case "Clear":
                         break;
                     case "Minus":
+                        Debug.Log("trigger minus");
+                        score.minusscore(Bonus, Accuracy, Mathf.Floor(time), letter.Length);
                         break;
                     case "Halfx":
                         break;
@@ -153,25 +178,18 @@ public class Typing : MonoBehaviour
                 }
                 if (gameStateManager.gameMode == GameStateManager.GameMode.Endless)
                 {
-                    if (letter == "Shield")
+                    switch (letter)
                     {
-
-                    }
-                    else if (letter == "Heal")
-                    {
-
-                    }
-                    else if (letter == "Vigor")
-                    {
-
-                    }
-                    else if (letter == "Hurt")
-                    {
-
-                    }
-                    else if (letter == "Sick")
-                    {
-
+                        case "Shield":
+                            break;
+                        case "Heal":
+                            break;
+                        case "Vigor":
+                            break;
+                        case "Hurt":
+                            break;
+                        case "Sick":
+                            break;
                     }
                 }
                 if (gameModeManager.game is WordMode wordMode)
