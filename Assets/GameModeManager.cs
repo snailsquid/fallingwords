@@ -16,7 +16,7 @@ public class GameModeManager : MonoBehaviour
         uiManager = ServiceLocator.Instance.uiManager;
         gameStateManager = ServiceLocator.Instance.gameStateManager;
         typing = ServiceLocator.Instance.typing;
-        timeMode = new TimeMode(maxTime);
+        timeMode = new TimeMode(9999999999);
     }
     public void StartGameMode(GameStateManager.GameMode gameMode)
     {
@@ -71,7 +71,11 @@ public abstract class Game
     public void UpdateUI(string currentValue, string maxValue)
     {
         if (uiElement == null || uiManager == null) return;
-        uiManager.SetText(uiElement, currentValue + "/" + maxValue);
+        if (maxValue == "" || maxValue == null)
+            uiManager.SetText(uiElement, currentValue);
+        else
+            uiManager.SetText(uiElement, currentValue + "/" + maxValue);
+
 
     }
 }
@@ -97,7 +101,9 @@ public class TimeMode : Game
     public void SetTime(float time)
     {
         timePassed = time;
-        UpdateUI((Mathf.Round(time / 60)) + ":" + Mathf.Round(time % 60), maxTime.ToString());
+        if (ServiceLocator.Instance.gameModeManager.game != null && ServiceLocator.Instance.gameModeManager.game.GetType() == typeof(TimeMode))
+            UpdateUI((Mathf.Floor(time / 60)) + ":" + Mathf.Floor(time % 60), maxTime.ToString());
+        else UpdateUI((Mathf.Floor(time / 60)) + ":" + Mathf.Floor(time % 60), null);
         if (timePassed >= maxTime)
         {
             EndGame();
