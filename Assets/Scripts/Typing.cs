@@ -89,38 +89,58 @@ public class Typing : MonoBehaviour
         float time = 0f;
         while (time <= nSeconds)
         {
-            fallingWordManager.initialSpeed = 0.5f;
+            foreach(FallingWordItem item in fallingWordManager.wordItems.Values)
+            {
+                item.speed = 0.5f;
+            }
             yield return time += Time.deltaTime;
         }
-        fallingWordManager.initialSpeed = 1.0f;
+        foreach(FallingWordItem item in fallingWordManager.wordItems.Values)
+            {
+                item.speed = 1.0f;
+            }
     }
     IEnumerator StartFastCoroutine()
     {
         float time = 0f;
         while (time <= nSeconds)
         {
-            fallingWordManager.initialSpeed = 2.0f;
+            foreach(FallingWordItem item in fallingWordManager.wordItems.Values)
+            {
+                item.speed = 2.0f;
+            }
             yield return time += Time.deltaTime;
         }
-        fallingWordManager.initialSpeed = 1.0f;
+        foreach(FallingWordItem item in fallingWordManager.wordItems.Values)
+            {
+                item.speed = 1.0f;
+            }
     }
     IEnumerator StartFreezeCoroutine()
     {
-        fallingWordItem = GameObject.FindWithTag("WordItem").GetComponent<FallingWordItem>();
         float time = 0f;
         while (time <= nSeconds)
         {
-            fallingWordItem.stop = 0.0f;
+            foreach(FallingWordItem item in fallingWordManager.wordItems.Values)
+            {
+                item.stop = 0.0f;
+            }
             yield return time += Time.deltaTime;
         }
-        fallingWordItem.stop = 1.0f;
+        foreach(FallingWordItem item in fallingWordManager.wordItems.Values)
+            {
+                item.stop = 1.0f;
+            }
     }
     IEnumerator Start2xBonusCoroutine()
     {
         float time = 0f;
         while (time <= nSeconds)
         {
-            Bonus = 2f;
+            if (Bonus < 3f)
+            {
+                Bonus = 2f;
+            }
             yield return time += Time.deltaTime;
         }
         Bonus = 1f;
@@ -130,6 +150,7 @@ public class Typing : MonoBehaviour
         float time = 0f;
         while (time <= nSeconds)
         {
+            
             Bonus = 3f;
             yield return time += Time.deltaTime;
         }
@@ -185,7 +206,10 @@ public class Typing : MonoBehaviour
                         StartCoroutine(Start3xBonusCoroutine());
                         break;
                     case "Clear":
-
+                        foreach(string item in fallingWordManager.wordItems.Keys.ToList())
+                        {
+                            fallingWordManager.wordItems[item].Despawn();
+                        }
                         break;
                     case "Minus":
                         Debug.Log("trigger minus");
