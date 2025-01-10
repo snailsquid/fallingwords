@@ -13,17 +13,20 @@ public class FallingWordManager : MonoBehaviour
     public Transform fallingWordPrefab, spawnArea;
     public WordGenerator.Theme theme;
     public WordsContainer wordsContainer;
+    score score;
     public Dictionary<string, FallingWordItem> wordItems = new Dictionary<string, FallingWordItem>();
     static public Typing typing;
     static public FallingWordItem fallingWordItem;
     void Start()
     {
         typing = ServiceLocator.Instance.typing;
+        score = GameObject.FindWithTag("Player").GetComponent<score>();
     }
     public void StartGame(WordGenerator.Theme theme)
     {
         this.theme = theme;
         wordsContainer = new WordsContainer(theme);
+        score.setScore(0);
         StartCoroutine(StartGameCoroutine());
     }
     IEnumerator StartGameCoroutine()

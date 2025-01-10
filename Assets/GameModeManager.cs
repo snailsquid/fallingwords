@@ -10,11 +10,13 @@ public class GameModeManager : MonoBehaviour
     [SerializeField] float maxTime;
     [SerializeField] int maxWord, maxLife;
     static public Typing typing;
+    TimeMode timeMode;
     void Start()
     {
         uiManager = ServiceLocator.Instance.uiManager;
         gameStateManager = ServiceLocator.Instance.gameStateManager;
         typing = ServiceLocator.Instance.typing;
+        timeMode = new TimeMode(maxTime);
     }
     public void StartGameMode(GameStateManager.GameMode gameMode)
     {
@@ -41,8 +43,13 @@ public class GameModeManager : MonoBehaviour
                 TimeMode timeMode = (TimeMode)game;
                 timeMode.AddTime(Time.deltaTime);
             }
+            else
+            {
+                timeMode.AddTime(Time.deltaTime);
+            }
         }
     }
+
 }
 
 
@@ -90,7 +97,7 @@ public class TimeMode : Game
     public void SetTime(float time)
     {
         timePassed = time;
-        UpdateUI(Mathf.RoundToInt(time).ToString(), maxTime.ToString());
+        UpdateUI((Mathf.Round(time / 60)) + ":" + Mathf.Round(time % 60), maxTime.ToString());
         if (timePassed >= maxTime)
         {
             EndGame();
@@ -144,11 +151,11 @@ public class EndlessMode : Game
     }
     public void ChangeLife(int plusmin)
     {
-        SetLife(life + (1*plusmin));
+        SetLife(life + (1 * plusmin));
     }
     public void SetMaxLife(int plusmin)
     {
-        maxLife += (1*plusmin);
+        maxLife += (1 * plusmin);
         UpdateUI(life.ToString(), maxLife.ToString());
     }
     public void SetLife(int life)
@@ -162,14 +169,14 @@ public class EndlessMode : Game
     }
     public void ShieldActive(bool Active)
     {
-        if(Active)
+        if (Active)
         {
             uiManager.SetText("ShieldText", "Active");
             Shield = true;
         }
         else
         {
-            uiManager.SetText("ShieldText","");
+            uiManager.SetText("ShieldText", "");
             Shield = false;
         }
     }

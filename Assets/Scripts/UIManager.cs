@@ -46,18 +46,18 @@ public class UIManager : MonoBehaviour
   }
   public void SetGameModeUI(GameStateManager.GameMode gameMode)
   {
-    SetActive("TypingUI",true);
+    SetActive("TypingUI", true);
+    SetActive("TimeMode", true);
     switch (gameMode)
     {
       case GameStateManager.GameMode.Time:
-        SetActive("TimeMode", true);
         break;
       case GameStateManager.GameMode.Word:
         SetActive("WordMode", true);
         break;
       case GameStateManager.GameMode.Endless:
         SetActive("EndlessMode", true);
-        SetActive("ShieldUI",true);
+        SetActive("ShieldUI", true);
         break;
     }
   }
