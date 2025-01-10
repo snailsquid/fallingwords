@@ -40,10 +40,14 @@ public class FallingWordItem : MonoBehaviour
             }
             else
             {
-                endlessMode.ChangeLife(-1);
-                //if (!fallingWordManager.WordGenerator.Is(word, fallingWordManager.WordGenerator.WordType.PowerUp)) //|| !fallingWordManager.WordGenerator.Is(word, fallingWordManager.WordGenerator.WordType.Trap))
+                if (WordGenerator.Is(word, WordGenerator.WordType.PowerUp) || WordGenerator.Is(word, WordGenerator.WordType.Trap))
                 {
+                    Debug.Log(word);
                     
+                }
+                else
+                {
+                    endlessMode.ChangeLife(-1);
                 }
             }
             

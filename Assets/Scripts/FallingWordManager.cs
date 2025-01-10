@@ -8,8 +8,8 @@ public class FallingWordManager : MonoBehaviour
     public float initialSpeed = 1.0f;
     public float speedVariation = 0.1f;
     public float rate = 1.0f;
-    public static float specialChance = 0.7f;
-    public static float powerupChance = 0.1f;
+    public static float specialChance = 0.1f;
+    public static float powerupChance = 0.7f;
     public Transform fallingWordPrefab, spawnArea;
     public WordGenerator.Theme theme;
     public WordsContainer wordsContainer;
@@ -125,8 +125,8 @@ public static class WordGenerator
             new List<string>{ "Paris", "Italy", "India", "Japan", "China", "River", "Beach", "Valley", "Tower", "Cliff" }, // 5 letters
             new List<string>{ "Canyon", "Lagoon", "Island", "Harbor", "Forest", "Brazil", "Sweden", "Canada", "Padang", "Bekasi" } // 6 letters
     };
-    static List<string> powerUp = new List<string> { "Slow", "Freeze", "2xBonus", "3xBonus", "Clear", "Shield", "Heal", "Vigor" };
-    static List<string> trap = new List<string> { "Fast", "Minus", "Halfx", "Blind", "Shuffle", "Hurt", "Sick" };
+    public static List<string> powerUp = new List<string> { "Slow", "Freeze", "2xBonus", "3xBonus", "Clear", "Shield", "Heal", "Vigor" };
+    public static List<string> trap = new List<string> { "Fast", "Minus", "Halfx", "Blind", "Shuffle", "Hurt", "Sick" };
 
     static readonly Dictionary<Theme, List<List<string>>> wordBank = new Dictionary<Theme, List<List<string>>>{
         { Theme.EverydayItems, everydayItems },
