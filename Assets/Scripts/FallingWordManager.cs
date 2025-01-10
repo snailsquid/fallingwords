@@ -9,8 +9,8 @@ public class FallingWordManager : MonoBehaviour
     public float initialSpeed = 1.0f;
     public float speedVariation = 0.1f;
     public float rate = 1.0f;
-    public static float specialChance = 0.7f;
-    public static float powerupChance = 0.1f;
+    public static float specialChance = 0.1f;
+    public static float powerupChance = 0.7f;
     public Transform fallingWordPrefab, spawnArea;
     public WordGenerator.Theme theme;
     public WordsContainer wordsContainer;
