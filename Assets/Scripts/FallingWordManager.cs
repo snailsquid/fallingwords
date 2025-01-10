@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using UnityEditor;
 using UnityEngine;
 
 public class FallingWordManager : MonoBehaviour
@@ -125,9 +126,9 @@ public static class WordGenerator
             new List<string>{ "Paris", "Italy", "India", "Japan", "China", "River", "Beach", "Valley", "Tower", "Cliff" }, // 5 letters
             new List<string>{ "Canyon", "Lagoon", "Island", "Harbor", "Forest", "Brazil", "Sweden", "Canada", "Padang", "Bekasi" } // 6 letters
     };
-    public static List<string> powerUp = new List<string> { "Slow", "Freeze", "2xBonus", "3xBonus", "Clear", "Shield", "Heal", "Vigor" };
-    public static List<string> trap = new List<string> { "Fast", "Minus", "Halfx", "Blind", "Shuffle", "Hurt", "Sick" };
-
+    static List<string> powerUp = new List<string> { "Slow", "Freeze", "2xBonus", "3xBonus", "Clear" };
+    static List<string> trap = new List<string> { "Fast", "Minus", "Halfx", "Blind", "Hurt", "Sick" };
+    static List<string> powerUpEndless = new List<string> { "Slow", "Freeze", "2xBonus", "3xBonus", "Clear", "Shield", "Heal", "Vigor" };
     static readonly Dictionary<Theme, List<List<string>>> wordBank = new Dictionary<Theme, List<List<string>>>{
         { Theme.EverydayItems, everydayItems },
         { Theme.Foods, foods },
@@ -143,8 +144,10 @@ public static class WordGenerator
     {
         return wordBank[theme].ToList();
     }
-    public static List<string> GetWordPowerUp()
+    public static List<string> GetWordPowerUp(bool isEndless)
     {
+        if (isEndless)
+            return trap.Concat(powerUpEndless).ToList();
         return powerUp.ToList();
     }
     public static List<string> GetWordTrap()
@@ -183,15 +186,16 @@ public class WordsContainer
     public void Reset(WordGenerator.Theme theme)
     {
         availableWords = WordGenerator.GetWordBank(theme);
-        powerUpWords = WordGenerator.GetWordPowerUp();
+        powerUpWords = WordGenerator.GetWordPowerUp(ServiceLocator.Instance.gameModeManager.game is EndlessMode);
         trapWords = WordGenerator.GetWordTrap();
         wordsOnScreen = new Dictionary<string, bool>();
     }
     public string GetRandomWord()
     {
         int special = Random.Range(0, 100);
+        float chance = FallingWordManager.specialChance;
         //float specialChance = new FallingWordManager().specialChance;
-        if (special >= 100f * FallingWordManager.specialChance)
+        if (special >= 100f * chance)
         {
             int randLen = GetNonEmptyIndex();
             int randWord = Random.Range(0, availableWords[randLen].Count - 1);
