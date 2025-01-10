@@ -10,16 +10,18 @@ public class Typing : MonoBehaviour
     public int totalScore;
     public float time = 0f;
     private int Accuracy = 0;
-    private int Bonus = 1;
+    private float Bonus = 1f;
     public string remainingWord = string.Empty;
     private string currentWord = string.Empty;
     static public FallingWordManager fallingWordManager;
     public FallingWordItem fallingWordItem;
     GameStateManager gameStateManager;
     GameModeManager gameModeManager;
+    UIManager uiManager;
     score score;
     void Start()
     {
+        uiManager = ServiceLocator.Instance.uiManager;
         fallingWordManager = ServiceLocator.Instance.fallingWordManager;
         gameStateManager = ServiceLocator.Instance.gameStateManager;
         gameModeManager = ServiceLocator.Instance.gameModeManager;
@@ -118,20 +120,40 @@ public class Typing : MonoBehaviour
         float time = 0f;
         while (time <= nSeconds)
         {
-            Bonus = 2;
+            Bonus = 2f;
             yield return time += Time.deltaTime;
         }
-        Bonus = 1;
+        Bonus = 1f;
     }
     IEnumerator Start3xBonusCoroutine()
     {
         float time = 0f;
         while (time <= nSeconds)
         {
-            Bonus = 3;
+            Bonus = 3f;
             yield return time += Time.deltaTime;
         }
-        Bonus = 1;
+        Bonus = 1f;
+    }
+    IEnumerator StartHalfxCoroutine()
+    {
+        float time = 0f;
+        while (time <= nSeconds)
+        {
+            Bonus = 0.5f;
+            yield return time += Time.deltaTime;
+        }
+        Bonus = 1f;
+    }
+    IEnumerator StartBlindCoroutine()
+    {
+        float time = 0f;
+        while (time <= nSeconds)
+        {
+            uiManager.SetActive("BlindCanvas", true);
+            yield return time += Time.deltaTime;
+        }
+        uiManager.SetActive("BlindCanvas", false);
     }
     private void isCorrect(string letter)
     {
@@ -151,7 +173,7 @@ public class Typing : MonoBehaviour
                         StartCoroutine(StartSlowCoroutine());
                         break;
                     case "Freeze":
-                        StartCoroutine(StartFreezeCoroutine());
+                        StartCoroutine(StartFreezeCoroutine()); //Still error
                         break;
                     case "Fast":
                         StartCoroutine(StartFastCoroutine());
@@ -163,32 +185,41 @@ public class Typing : MonoBehaviour
                         StartCoroutine(Start3xBonusCoroutine());
                         break;
                     case "Clear":
+
                         break;
                     case "Minus":
                         Debug.Log("trigger minus");
                         score.minusscore(Bonus, Accuracy, Mathf.Floor(time), letter.Length);
                         break;
                     case "Halfx":
+                        StartCoroutine(StartHalfxCoroutine());
                         break;
                     case "Blind":
+                        StartCoroutine(StartBlindCoroutine());
                         break;
                     case "Shuffle":
+
                         break;
 
                 }
-                if (gameStateManager.gameMode == GameStateManager.GameMode.Endless)
+                if (gameModeManager.game is EndlessMode endlessMode)
                 {
                     switch (letter)
                     {
                         case "Shield":
+                            endlessMode.ShieldActive(true);
                             break;
                         case "Heal":
+                            endlessMode.ChangeLife(1);
                             break;
                         case "Vigor":
+                            endlessMode.SetMaxLife(1);
                             break;
                         case "Hurt":
+                            endlessMode.ChangeLife(-1);
                             break;
                         case "Sick":
+                            endlessMode.SetMaxLife(-1);
                             break;
                     }
                 }

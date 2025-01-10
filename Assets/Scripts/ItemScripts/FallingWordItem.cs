@@ -28,12 +28,25 @@ public class FallingWordItem : MonoBehaviour
     }
     void OnTriggerEnter2D(Collider2D collision)
     {
+        
         if (collision.gameObject.CompareTag("Despawner"))
         {
             Despawn();
             Game game = ServiceLocator.Instance.gameModeManager.game;
             if (game is EndlessMode endlessMode)
-                endlessMode.RemoveLife();
+            if(endlessMode.Shield == true)
+            {
+                endlessMode.ShieldActive(false);
+            }
+            else
+            {
+                endlessMode.ChangeLife(-1);
+                //if (!fallingWordManager.WordGenerator.Is(word, fallingWordManager.WordGenerator.WordType.PowerUp)) //|| !fallingWordManager.WordGenerator.Is(word, fallingWordManager.WordGenerator.WordType.Trap))
+                {
+                    
+                }
+            }
+            
         }
     }
     public void Despawn()

@@ -130,6 +130,7 @@ public class EndlessMode : Game
 {
     public int maxLife;
     public int life;
+    public bool Shield;
     public EndlessMode(int maxLife)
     {
         uiElement = "LifeText";
@@ -141,9 +142,14 @@ public class EndlessMode : Game
     {
         SetLife(maxLife);
     }
-    public void RemoveLife()
+    public void ChangeLife(int plusmin)
     {
-        SetLife(life - 1);
+        SetLife(life + (1*plusmin));
+    }
+    public void SetMaxLife(int plusmin)
+    {
+        maxLife += (1*plusmin);
+        UpdateUI(life.ToString(), maxLife.ToString());
     }
     public void SetLife(int life)
     {
@@ -152,6 +158,19 @@ public class EndlessMode : Game
         if (life <= 0)
         {
             EndGame();
+        }
+    }
+    public void ShieldActive(bool Active)
+    {
+        if(Active)
+        {
+            uiManager.SetText("ShieldText", "Active");
+            Shield = true;
+        }
+        else
+        {
+            uiManager.SetText("ShieldText","");
+            Shield = false;
         }
     }
 }

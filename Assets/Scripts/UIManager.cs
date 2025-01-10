@@ -57,6 +57,7 @@ public class UIManager : MonoBehaviour
         break;
       case GameStateManager.GameMode.Endless:
         SetActive("EndlessMode", true);
+        SetActive("ShieldUI",true);
         break;
     }
   }
