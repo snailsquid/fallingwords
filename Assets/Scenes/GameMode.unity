@@ -168,7 +168,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   initialSpeed: 1
   speedVariation: 0.1
-  rate: 0.5
+  rate: 2
   fallingWordPrefab: {fileID: 4848933000920299550, guid: e4d53d39a86b20448baded3d0d43cb8c, type: 3}
   spawnArea: {fileID: 2040961672}
   theme: 0
@@ -754,7 +754,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &217600613
 MonoBehaviour:
   m_ObjectHideFlags: 0

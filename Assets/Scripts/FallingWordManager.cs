@@ -33,10 +33,17 @@ public class FallingWordManager : MonoBehaviour
     {
         while (GameStateManager.Instance.gameState == GameStateManager.GameState.Playing)
         {
+            float time = Time.time;
+            float deltaTime = 0;
             string word = wordsContainer.GetRandomWord();
             InstantiateWord(word);
-            yield return new WaitForSeconds(1.0f / rate);
+            yield return new WaitForSeconds(TimeDelay(deltaTime) * rate);
+            deltaTime = Time.time - time;
         }
+    }
+    float TimeDelay(float currentTime)
+    {
+        return 1 - (Mathf.Exp(currentTime - 4) / ((Mathf.Exp(currentTime - 4) + 1) * 2));
     }
     void InstantiateWord(string word)
     {
