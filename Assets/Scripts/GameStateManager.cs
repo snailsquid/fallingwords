@@ -8,7 +8,9 @@ public class GameStateManager : MonoBehaviour
     public GameState gameState { get; private set; }
     public GameMode gameMode { get; private set; }
     public WordGenerator.Theme theme { get; private set; }
+
     UIManager uiManager;
+    GameModeManager gameModeManager;
     public void SetGameState(GameState gameState)
     {
         this.gameState = gameState;
@@ -17,16 +19,21 @@ public class GameStateManager : MonoBehaviour
             case GameState.MainMenu:
                 // Show the main menu
                 uiManager.NextUI("GameOver", "MainMenu");
+                uiManager.SetActive("ScoreCanvas", false);
                 break;
             case GameState.Playing:
                 // Start the game
-                uiManager.NextUIGroup("NonPlay", "Play");
+                uiManager.SetActiveGroup("NonPlay", false);
+                uiManager.SetGameModeUI(gameMode);
+                uiManager.SetActive("ScoreCanvas", true);
+                gameModeManager.StartGameMode(gameMode);
                 ServiceLocator.Instance.fallingWordManager.StartGame(theme);
                 break;
             case GameState.GameOver:
                 // Show the game over screen
                 uiManager.SetActiveGroup("Play", false);
                 uiManager.SetActive("GameOver", true);
+                uiManager.SetActive("ScoreCanvas", true);
                 break;
             case GameState.ModeSelect:
                 // Show the mode select screen
@@ -40,11 +47,13 @@ public class GameStateManager : MonoBehaviour
     }
     void Start()
     {
-        uiManager = ServiceLocator.Instance.uiManager;
+        ServiceLocator serviceLocator = ServiceLocator.Instance;
+        uiManager = serviceLocator.uiManager;
         SetGameState(GameState.MainMenu);
+        gameModeManager = serviceLocator.gameModeManager;
         // Debug stuff
-        // gameState = GameState.Playing;
-        // ServiceLocator.Instance.fallingWordManager.StartGame(WordGenerator.Theme.EverydayItems);
+        //gameState = GameState.Playing;
+        //ServiceLocator.Instance.fallingWordManager.StartGame(WordGenerator.Theme.EverydayItems);
     }
     public void SetTheme(WordGenerator.Theme theme)
     {
